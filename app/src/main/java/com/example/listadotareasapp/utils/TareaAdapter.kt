@@ -15,7 +15,8 @@ import com.google.android.material.checkbox.MaterialCheckBox.OnCheckedStateChang
 class TareaAdapter(private var dataSet: List<Tarea> = emptyList(),
                    private val onItemClickListener: (Int) -> Unit,
                    private val onDeleteClickListener: (Int) -> Unit,
-                   private val onCheckBoxChangedListener: (Int) -> Unit) : RecyclerView.Adapter<TareaViewHolder>(){
+                   private val onCheckBoxChangedListener: (Int) -> Unit,
+                    private val onEditClickListener: (Int) -> Unit ) : RecyclerView.Adapter<TareaViewHolder>(){
 
     private var highlightText: String? = null
 
@@ -37,12 +38,16 @@ class TareaAdapter(private var dataSet: List<Tarea> = emptyList(),
             onDeleteClickListener(holder.adapterPosition)
         }
 
+
         holder.binding.realizadoCheckBox.setOnCheckedChangeListener {chk , _ ->
         if (chk.isPressed)
             onCheckBoxChangedListener(holder.adapterPosition)
 
         }
 
+        holder.binding.editImageButton.setOnClickListener{
+            onEditClickListener(holder.adapterPosition)
+        }
 
 
     }

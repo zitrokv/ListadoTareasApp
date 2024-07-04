@@ -1,26 +1,23 @@
-package com.example.listadotareasapp
+package com.example.listadotareasapp.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.listadotareasapp.data.Tarea
 import com.example.listadotareasapp.data.TareaDAO
 import com.example.listadotareasapp.databinding.ActivityMainBinding
 import com.example.listadotareasapp.utils.TareaAdapter
-import java.lang.reflect.Array.getBoolean
-import java.lang.reflect.Array.getInt
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding : ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     private lateinit var adapter: TareaAdapter
     private lateinit var taskDAO: TareaDAO
     lateinit var tareaList: List<Tarea>
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         taskDAO.insert(Tarea(-1, "Abono del tren", false))
         taskDAO.insert(Tarea(-1, "Organizar entierro", false))
 */
-       /* Log.i("DATABASE", task.toString())
+        /* Log.i("DATABASE", task.toString())
 
         task.realizada = true
 
@@ -58,12 +55,14 @@ class MainActivity : AppCompatActivity() {
 
         adapter = TareaAdapter(
             emptyList(), {
-            Toast.makeText(
-                this,
-                "Click en ${tareaList[it].nombre}",
-                Toast.LENGTH_LONG
-            ).show()},
-            { taskDAO.delete(tareaList[it])
+                Toast.makeText(
+                    this,
+                    "Click en ${tareaList[it].nombre}",
+                    Toast.LENGTH_LONG
+                ).show()
+            },
+            {
+                taskDAO.delete(tareaList[it])
                 Toast.makeText(
                     this,
                     "Click en ${tareaList[it].nombre}",
@@ -72,9 +71,13 @@ class MainActivity : AppCompatActivity() {
                 loadData()
             },
 
-            {  tareaList[it].realizada = !tareaList[it].realizada
+            {
+                tareaList[it].realizada = !tareaList[it].realizada
                 taskDAO.update(tareaList[it])
-              loadData()
+                loadData()
+            },
+            {
+                mostrarDialog()
             }
         )
 
@@ -88,11 +91,16 @@ class MainActivity : AppCompatActivity() {
         }*/
 
         binding.recyclerView.adapter = adapter
-        //binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerView.layoutManager = GridLayoutManager(this, 1)
         //binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        //binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
+        binding.addTaskButton.setOnClickListener {
+            val intent = Intent(this, DetalleActivity::class.java)
+            startActivity(intent)
+        }
 
+        //mostrarDialog()
         //loadData()
     }
 
@@ -107,4 +115,39 @@ class MainActivity : AppCompatActivity() {
 
         adapter.updateData(tareaList)
     }
+
+    fun mostrarDialog() {
+    val builder = AlertDialog.Builder(this)
+    builder.setTitle("Androidly Alert")
+    builder.setMessage("We have a message")
+//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
+    builder.setPositiveButton(android.R.string.yes)
+    {
+        dialog, which ->
+        Toast.makeText(
+            applicationContext,
+            android.R.string.yes, Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    builder.setNegativeButton(android.R.string.no)
+    {
+        dialog, which ->
+        Toast.makeText(
+            applicationContext,
+            android.R.string.no, Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    builder.setNeutralButton("Maybe")
+    {
+        dialog, which ->
+        Toast.makeText(
+            applicationContext,
+            "Maybe", Toast.LENGTH_SHORT
+        ).show()
+    }
+    builder.show()
+}
 }
